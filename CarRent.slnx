@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CarRent.Api/CarRent.Api.csproj" />
+    <Project Path="src/CarRent.Application/CarRent.Application.csproj" />
+    <Project Path="src/CarRent.Domain/CarRent.Domain.csproj" />
+    <Project Path="src/CarRent.Infrastructure/CarRent.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CarRent.Tests/CarRent.Tests.csproj" />
+  </Folder>
+</Solution>
