@@ -1,0 +1,137 @@
+[
+  {
+    "carIndex": 0,
+    "userIndex": 0,
+    "createdHoursAgo": 2,
+    "startOffsetDays": 1,
+    "durationDays": 3,
+    "status": "Confirmed",
+    "totalPrice": 780.00
+  },
+  {
+    "carIndex": 1,
+    "userIndex": 1,
+    "createdHoursAgo": 5,
+    "startOffsetDays": 2,
+    "durationDays": 2,
+    "status": "Confirmed",
+    "totalPrice": 480.00
+  },
+  {
+    "carIndex": 2,
+    "userIndex": 2,
+    "createdHoursAgo": 8,
+    "startOffsetDays": 1,
+    "durationDays": 4,
+    "status": "Pending",
+    "totalPrice": 640.00
+  },
+  {
+    "carIndex": 3,
+    "userIndex": 0,
+    "createdHoursAgo": 12,
+    "startOffsetDays": 3,
+    "durationDays": 2,
+    "status": "Confirmed",
+    "totalPrice": 640.00
+  },
+  {
+    "carIndex": 4,
+    "userIndex": 1,
+    "createdHoursAgo": 16,
+    "startOffsetDays": 2,
+    "durationDays": 3,
+    "status": "Completed",
+    "totalPrice": 870.00
+  },
+  {
+    "carIndex": 5,
+    "userIndex": 2,
+    "createdHoursAgo": 20,
+    "startOffsetDays": 4,
+    "durationDays": 5,
+    "status": "Confirmed",
+    "totalPrice": 1400.00
+  },
+  {
+    "carIndex": 6,
+    "userIndex": 0,
+    "createdHoursAgo": 24,
+    "startOffsetDays": 1,
+    "durationDays": 2,
+    "status": "Pending",
+    "totalPrice": 300.00
+  },
+  {
+    "carIndex": 7,
+    "userIndex": 1,
+    "createdHoursAgo": 28,
+    "startOffsetDays": 2,
+    "durationDays": 4,
+    "status": "Confirmed",
+    "totalPrice": 1100.00
+  },
+  {
+    "carIndex": 8,
+    "userIndex": 2,
+    "createdHoursAgo": 32,
+    "startOffsetDays": 3,
+    "durationDays": 3,
+    "status": "Confirmed",
+    "totalPrice": 630.00
+  },
+  {
+    "carIndex": 9,
+    "userIndex": 0,
+    "createdHoursAgo": 38,
+    "startOffsetDays": 5,
+    "durationDays": 4,
+    "status": "Completed",
+    "totalPrice": 880.00
+  },
+  {
+    "carIndex": 10,
+    "userIndex": 1,
+    "createdHoursAgo": 44,
+    "startOffsetDays": 1,
+    "durationDays": 3,
+    "status": "Confirmed",
+    "totalPrice": 375.00
+  },
+  {
+    "carIndex": 11,
+    "userIndex": 2,
+    "createdHoursAgo": 47,
+    "startOffsetDays": 2,
+    "durationDays": 2,
+    "status": "Pending",
+    "totalPrice": 270.00
+  },
+  {
+    "carIndex": 12,
+    "userIndex": 0,
+    "createdHoursAgo": 72,
+    "startOffsetDays": -5,
+    "durationDays": 3,
+    "status": "Completed",
+    "totalPrice": 285.00
+  },
+  {
+    "carIndex": 13,
+    "userIndex": 1,
+    "createdHoursAgo": 96,
+    "startOffsetDays": 1,
+    "durationDays": 2,
+    "status": "Cancelled",
+    "totalPrice": 470.00
+  },
+  {
+    "carIndex": 14,
+    "userIndex": 2,
+    "createdHoursAgo": 120,
+    "startOffsetDays": -7,
+    "durationDays": 4,
+    "status": "Completed",
+    "totalPrice": 340.00
+  }
+]

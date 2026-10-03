@@ -8,10 +8,11 @@ public class BookingFilterSpecification : Specification<Booking>
 {
     public BookingFilterSpecification(BookingFilterModel filter)
     {
-        Query.AsNoTracking();
-        
         if (filter.CarId.HasValue)
             Query.Where(b => b.CarId == filter.CarId.Value);
+        
+        if (filter.UserId.HasValue)
+            Query.Where(b => b.UserId == filter.UserId.Value);
 
         if (filter.StartDate.HasValue)
             Query.Where(b => b.StartDate >= filter.StartDate.Value);
@@ -19,10 +20,8 @@ public class BookingFilterSpecification : Specification<Booking>
         if (filter.EndDate.HasValue)
             Query.Where(b => b.EndDate <= filter.EndDate.Value);
 
-        Query.Include(b => b.Car);
+        Query.Include(b => b.Car)
+            .Include(b => b.Payment);
         Query.OrderBy(b => b.StartDate);
-        
-        Query.Skip((filter.PageNumber - 1) * filter.PageSize)
-            .Take(filter.PageSize);
     }
 }

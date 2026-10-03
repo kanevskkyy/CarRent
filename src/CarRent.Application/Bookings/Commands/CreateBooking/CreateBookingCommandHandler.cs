@@ -1,0 +1,51 @@
+﻿using AutoMapper;
+using CarRent.Application.Abstractions;
+using CarRent.Application.DTOs.Bookings;
+using CarRent.Application.Exceptions;
+using CarRent.Application.Interfaces.Repositories;
+using CarRent.Domain.Entities;
+
+namespace CarRent.Application.Bookings.Commands.CreateBooking;
+
+public class CreateBookingCommandHandler : ICommandHandler<CreateBookingCommand, BookingListResponse>
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
+
+    public CreateBookingCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    {
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
+
+    public async Task<BookingListResponse> Handle(CreateBookingCommand command, CancellationToken cancellationToken)
+    {
+        if (command.Request.StartDate >= command.Request.EndDate)
+            throw new ValidationException("Start date must be before end date.");
+
+        Car? car = await _unitOfWork.Cars.GetByIdAsync(command.Request.CarId, cancellationToken);
+        if (car == null)
+            throw new NotFoundException($"Car with id {command.Request.CarId} not found.");
+
+        bool isAvailable = await _unitOfWork.Bookings.IsCarAvailableAsync(
+            command.Request.CarId, 
+            command.Request.StartDate, 
+            command.Request.EndDate, 
+            cancellationToken);
+
+        if (!isAvailable)
+            throw new ValidationException("Car is not available for the selected dates.");
+
+        int totalDays = (int)Math.Ceiling((command.Request.EndDate - command.Request.StartDate).TotalDays);
+
+        Booking booking = _mapper.Map<Booking>(command.Request);
+        booking.UserId = command.UserId;
+        booking.TotalPrice = totalDays * car.DailyPrice;
+
+        await _unitOfWork.Bookings.AddAsync(booking, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        booking.Car = car;
+        return _mapper.Map<BookingListResponse>(booking);
+    }
+}

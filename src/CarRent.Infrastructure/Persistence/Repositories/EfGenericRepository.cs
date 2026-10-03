@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarRent.Infrastructure.Persistence.Repositories;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : class
+public class EfGenericRepository<T> : IGenericRepository<T> where T : class
 {
     protected CarRentDbContext context;
     protected DbSet<T> dbSet;
 
-    public GenericRepository(CarRentDbContext context)
+    public EfGenericRepository(CarRentDbContext context)
     {
         this.context = context;
         dbSet = this.context.Set<T>();

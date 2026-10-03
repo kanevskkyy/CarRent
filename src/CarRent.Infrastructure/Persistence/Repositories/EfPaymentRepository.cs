@@ -3,9 +3,9 @@ using CarRent.Domain.Entities;
 
 namespace CarRent.Infrastructure.Persistence.Repositories;
 
-public class PaymentRepository : GenericRepository<Payment>, IPaymentRepository
+public class EfPaymentRepository : EfGenericRepository<Payment>, IPaymentRepository
 {
-    public PaymentRepository(CarRentDbContext context) : base(context)
+    public EfPaymentRepository(CarRentDbContext context) : base(context)
     {
         
     }
