@@ -30,7 +30,6 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services
     .AddIdentity<User, IdentityRole<Guid>>(options =>
     {
-        // Password policy is enforced by our FluentValidation validators
         options.Password.RequireDigit = false;
         options.Password.RequireLowercase = false;
         options.Password.RequireUppercase = false;

@@ -20,6 +20,8 @@ public static class DependencyInjection
         this IServiceCollection services, 
         IConfiguration configuration)
     {
+        services.AddHttpClient();
+        
         //DB CONTEXT
         services.AddDbContext<CarRentDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
@@ -41,6 +43,7 @@ public static class DependencyInjection
         //JWT
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IAuthTokenService, AuthTokenService>();
         
         //USER IDENTITY
         services.AddHttpContextAccessor();
@@ -53,6 +56,13 @@ public static class DependencyInjection
         
         //BACKGROUND SERVICE
         services.AddHostedService<BookingExpirationBackgroundService>();
+        
+        //EXTERNAL AUTH
+        services.Configure<GoogleSettings>(configuration.GetSection(GoogleSettings.SectionName));
+        services.AddScoped<IExternalAuthProvider, GoogleAuthProvider>();
+        
+        services.Configure<GitHubSettings>(configuration.GetSection(GitHubSettings.SectionName));
+        services.AddScoped<IExternalAuthProvider, GitHubAuthProvider>();
         
         return services;
     }

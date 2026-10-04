@@ -1,8 +1,8 @@
+using CarRent.Application.Auth.Commands.ExternalLogin;
 using CarRent.Application.Auth.Commands.Login;
 using CarRent.Application.Auth.Commands.RefreshToken;
 using CarRent.Application.Auth.Commands.Register;
 using CarRent.Application.Auth.Commands.RevokeToken;
-using CarRent.Application.Auth.Commands.UploadDriverLicense;
 using CarRent.Application.DTOs.Auth;
 using CarRent.Application.Interfaces.Services;
 using MediatR;
@@ -113,5 +113,37 @@ public class AuthController : ControllerBase
 
         _logger.LogInformation("Token revoked successfully.");
         return NoContent();
+    }
+    
+    /// <summary>
+    /// Authenticate with a Google ID token.
+    /// </summary>
+    [HttpPost("google")]
+    [AllowAnonymous]
+    public async Task<ActionResult<AuthResponse>> Google(
+        [FromBody] ExternalLoginRequest request,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Google login attempt.");
+
+        AuthResponse result = await _sender.Send(new ExternalLoginCommand("Google", request), cancellationToken);
+
+        return Ok(result);
+    }
+    
+    /// <summary>
+    /// Authenticate with a GitHub OAuth authorization code (pass it in the "idToken" field).
+    /// </summary>
+    [HttpPost("github")]
+    [AllowAnonymous]
+    public async Task<ActionResult<AuthResponse>> GitHub(
+        [FromBody] ExternalLoginRequest request,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("GitHub login attempt.");
+
+        AuthResponse result = await _sender.Send(new ExternalLoginCommand("GitHub", request), cancellationToken);
+
+        return Ok(result);
     }
 }
