@@ -18,6 +18,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.LicenseStatus)
             .HasConversion<string>()
             .HasMaxLength(20);
+        
+        builder.Property(u => u.DriverLicenseImageUrl).HasMaxLength(500);
 
         builder.HasMany(u => u.Bookings)
             .WithOne(b => b.User)

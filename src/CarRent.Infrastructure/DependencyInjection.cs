@@ -4,6 +4,7 @@ using CarRent.Application.Interfaces.Services;
 using CarRent.Application.Services;
 using CarRent.Infrastructure.BackgroundServices;
 using CarRent.Infrastructure.ExternalServices;
+using CarRent.Infrastructure.Identity;
 using CarRent.Infrastructure.Persistence;
 using CarRent.Infrastructure.Persistence.Repositories;
 using CarRent.Infrastructure.Persistence.Seeders;
@@ -78,6 +79,9 @@ public static class DependencyInjection
             return ConnectionMultiplexer.Connect(options);
         });
         services.AddScoped<IFavoriteCarStore, RedisFavoriteCarStore>();
+        
+        //BASIC VERIFICATION
+        services.AddScoped<IDriverLicenseVerifier, BasicDriverLicenseVerifier>();
         
         return services;
     }

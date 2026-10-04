@@ -9,6 +9,7 @@ public class User : IdentityUser<Guid>
 
     public string? DriverLicenseNumber { get; set; }
     public DriverLicenseVerificationStatus LicenseStatus { get; set; } = DriverLicenseVerificationStatus.NotSubmitted;
+    public string? DriverLicenseImageUrl { get; set; }
     
     public List<Booking> Bookings { get; set; } = new();
     public List<RefreshToken> RefreshTokens { get; set; } = new();

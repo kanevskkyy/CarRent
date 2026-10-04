@@ -213,6 +213,10 @@ namespace CarRent.Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DriverLicenseImageUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<string>("DriverLicenseNumber")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");

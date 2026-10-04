@@ -15,27 +15,62 @@ public class UploadDriverLicenseCommandHandler : ICommandHandler<UploadDriverLic
 {
     private readonly UserManager<User> _userManager;
     private readonly IImageUploaderService _imageUploaderService;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IDriverLicenseVerifier _verifier;
 
     public UploadDriverLicenseCommandHandler(
         UserManager<User> userManager,
         IImageUploaderService imageUploaderService,
-        IUnitOfWork unitOfWork)
+        IDriverLicenseVerifier verifier)
     {
         _userManager = userManager;
         _imageUploaderService = imageUploaderService;
-        _unitOfWork = unitOfWork;
+        _verifier = verifier;
     }
 
-    public async Task<UploadDriverLicenseResponse> Handle(UploadDriverLicenseCommand command, CancellationToken cancellationToken)
+    public async Task<UploadDriverLicenseResponse> Handle(
+        UploadDriverLicenseCommand command, CancellationToken cancellationToken)
     {
-        // TODO: Implement driver license upload logic
-        // 1. Find user by command.UserId
-        // 2. Upload image to cloud storage via _imageUploaderService
-        // 3. Save the image URL to user.DriverLicenseNumber or separate field
-        // 4. Set user.LicenseStatus = DriverLicenseVerificationStatus.Pending
-        // 5. Save changes via UserManager
-        // 6. Return UploadDriverLicenseResponse with message and status
-        throw new NotImplementedException("UploadDriverLicense is not yet implemented.");
+        User? user = await _userManager.FindByIdAsync(command.UserId.ToString());
+        if (user is null)
+            throw new NotFoundException("User not found.");
+
+        if (user.LicenseStatus == DriverLicenseVerificationStatus.Verified)
+            throw new ConflictException("Driver license is already verified.");
+
+        string number = command.LicenseNumber.Replace(" ", "").Trim().ToUpperInvariant();
+
+        bool isValid = await _verifier.VerifyAsync(number, cancellationToken);
+        if (!isValid)
+        {
+            user.LicenseStatus = DriverLicenseVerificationStatus.Rejected;
+            await SaveAsync(user);
+
+            return new UploadDriverLicenseResponse
+            {
+                Message = "Invalid driver license number format.",
+                Status = user.LicenseStatus
+            };
+        }
+
+        string imageUrl = await _imageUploaderService.UploadAsync(
+            command.ImageStream, command.FileName, cancellationToken);
+
+        user.DriverLicenseNumber = number;
+        user.DriverLicenseImageUrl = imageUrl;
+        user.LicenseStatus = DriverLicenseVerificationStatus.Verified;
+        await SaveAsync(user);
+
+        return new UploadDriverLicenseResponse
+        {
+            Message = "Driver license verified.",
+            Status = user.LicenseStatus
+        };
+    }
+
+    private async Task SaveAsync(User user)
+    {
+        IdentityResult result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+            throw new ValidationException(string.Join("; ", result.Errors.Select(e => e.Description)));
     }
 }

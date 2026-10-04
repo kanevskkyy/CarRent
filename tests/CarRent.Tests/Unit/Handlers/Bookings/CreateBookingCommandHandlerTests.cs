@@ -4,8 +4,10 @@ using CarRent.Application.DTOs.Bookings;
 using CarRent.Application.Exceptions;
 using CarRent.Application.Interfaces.Repositories;
 using CarRent.Domain.Entities;
+using CarRent.Domain.Enums;
 using CarRent.Tests.Common;
 using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
 using Moq;
 using Xunit;
 
@@ -16,6 +18,7 @@ public class CreateBookingCommandHandlerTests
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<ICarRepository> _carRepoMock;
     private readonly Mock<IBookingRepository> _bookingRepoMock;
+    private readonly Mock<UserManager<User>> _userManagerMock;
     private readonly IMapper _mapper;
     private readonly CreateBookingCommandHandler _handler;
 
@@ -27,8 +30,69 @@ public class CreateBookingCommandHandlerTests
         _unitOfWorkMock.Setup(u => u.Cars).Returns(_carRepoMock.Object);
         _unitOfWorkMock.Setup(u => u.Bookings).Returns(_bookingRepoMock.Object);
 
+        _userManagerMock = TestHelper.CreateMockUserManager();
         _mapper = TestHelper.CreateMapper();
-        _handler = new CreateBookingCommandHandler(_unitOfWorkMock.Object, _mapper);
+        _handler = new CreateBookingCommandHandler(
+            _unitOfWorkMock.Object,
+            _mapper,
+            _userManagerMock.Object);
+    }
+
+    private void SetupUser(Guid userId, DriverLicenseVerificationStatus status)
+    {
+        _userManagerMock
+            .Setup(m => m.FindByIdAsync(userId.ToString()))
+            .ReturnsAsync(new User { Id = userId, LicenseStatus = status });
+    }
+
+    [Fact]
+    public async Task Handle_WhenUserNotFound_ThrowsValidationException()
+    {
+        // Arrange
+        Guid userId = Guid.NewGuid();
+        _userManagerMock
+            .Setup(m => m.FindByIdAsync(userId.ToString()))
+            .ReturnsAsync((User?)null);
+
+        CreateBookingCommand command = new(userId, new CreateBookingRequest
+        {
+            CarId = Guid.NewGuid(),
+            StartDate = DateTime.UtcNow.AddDays(1),
+            EndDate = DateTime.UtcNow.AddDays(4)
+        });
+
+        // Act
+        Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        await act.Should().ThrowAsync<ValidationException>()
+            .WithMessage("Driver license must be verified before booking.");
+    }
+
+    [Theory]
+    [InlineData(DriverLicenseVerificationStatus.NotSubmitted)]
+    [InlineData(DriverLicenseVerificationStatus.Pending)]
+    [InlineData(DriverLicenseVerificationStatus.Rejected)]
+    public async Task Handle_WhenLicenseNotVerified_ThrowsValidationException(
+        DriverLicenseVerificationStatus status)
+    {
+        // Arrange
+        Guid userId = Guid.NewGuid();
+        SetupUser(userId, status);
+
+        CreateBookingCommand command = new(userId, new CreateBookingRequest
+        {
+            CarId = Guid.NewGuid(),
+            StartDate = DateTime.UtcNow.AddDays(1),
+            EndDate = DateTime.UtcNow.AddDays(4)
+        });
+
+        // Act
+        Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        await act.Should().ThrowAsync<ValidationException>()
+            .WithMessage("Driver license must be verified before booking.");
     }
 
     [Fact]
@@ -43,6 +107,7 @@ public class CreateBookingCommandHandlerTests
             EndDate = DateTime.UtcNow.AddDays(4)
         };
         CreateBookingCommand command = new(Guid.NewGuid(), request);
+        SetupUser(command.UserId, DriverLicenseVerificationStatus.Verified);
 
         _carRepoMock.Setup(c => c.GetByIdAsync(carId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Car?)null);
@@ -67,10 +132,12 @@ public class CreateBookingCommandHandlerTests
             EndDate = DateTime.UtcNow.AddDays(4)
         };
         CreateBookingCommand command = new(Guid.NewGuid(), request);
+        SetupUser(command.UserId, DriverLicenseVerificationStatus.Verified);
 
         _carRepoMock.Setup(c => c.GetByIdAsync(car.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(car);
-        _bookingRepoMock.Setup(b => b.IsCarAvailableAsync(car.Id, request.StartDate, request.EndDate, It.IsAny<CancellationToken>()))
+        _bookingRepoMock.Setup(b => b.IsCarAvailableAsync(
+                car.Id, request.StartDate, request.EndDate, It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
         // Act
@@ -89,6 +156,7 @@ public class CreateBookingCommandHandlerTests
         DateTime startDate = DateTime.UtcNow.Date.AddDays(1);
         DateTime endDate = startDate.AddDays(3); // 3 days
         Guid userId = Guid.NewGuid();
+        SetupUser(userId, DriverLicenseVerificationStatus.Verified);
 
         CreateBookingRequest request = new()
         {
@@ -100,7 +168,8 @@ public class CreateBookingCommandHandlerTests
 
         _carRepoMock.Setup(c => c.GetByIdAsync(car.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(car);
-        _bookingRepoMock.Setup(b => b.IsCarAvailableAsync(car.Id, startDate, endDate, It.IsAny<CancellationToken>()))
+        _bookingRepoMock.Setup(b => b.IsCarAvailableAsync(
+                car.Id, startDate, endDate, It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
         Booking? savedBooking = null;

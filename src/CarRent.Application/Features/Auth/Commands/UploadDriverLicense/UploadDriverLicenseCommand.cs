@@ -6,5 +6,6 @@ namespace CarRent.Application.Auth.Commands.UploadDriverLicense;
 public record UploadDriverLicenseCommand(
     Guid UserId,
     Stream ImageStream,
-    string FileName
+    string FileName,
+    string LicenseNumber
 ) : ICommand<UploadDriverLicenseResponse>;
