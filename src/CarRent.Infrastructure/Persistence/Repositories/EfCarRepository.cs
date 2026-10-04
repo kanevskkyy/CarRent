@@ -29,6 +29,17 @@ public class EfCarRepository : EfGenericRepository<Car>, ICarRepository
 
         return new PagedList<Car>(cars, totalCount, parameters.PageNumber, parameters.PageSize);
     }
+    
+    public async Task<IReadOnlyList<Car>> GetByIdsAsync(
+        IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken = default)
+    {
+        List<Guid> idList = ids.ToList();
+
+        return await dbSet
+            .AsNoTracking()
+            .Where(c => idList.Contains(c.Id))
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task<Car?> GetCarByIdWithBookingsAsync(Guid carId, CancellationToken cancellationToken = default)
     {

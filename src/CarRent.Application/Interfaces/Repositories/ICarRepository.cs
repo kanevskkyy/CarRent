@@ -6,6 +6,7 @@ namespace CarRent.Application.Interfaces.Repositories;
 
 public interface ICarRepository : IGenericRepository<Car>
 {
+    Task<IReadOnlyList<Car>> GetByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken = default);
     Task<PagedList<Car>> GetPagedCarsWithFiltersAsync(CarFilterModel parameters, CancellationToken cancellationToken = default);
     Task<Car?> GetCarByIdWithBookingsAsync(Guid carId, CancellationToken cancellationToken = default);
 }

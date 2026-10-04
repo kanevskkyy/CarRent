@@ -11,6 +11,7 @@ using CarRent.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 
 namespace CarRent.Infrastructure;
 
@@ -66,6 +67,17 @@ public static class DependencyInjection
         //PAYPAL
         services.Configure<PayPalSettings>(configuration.GetSection(PayPalSettings.SectionName));
         services.AddHttpClient<IPaymentGateway, PayPalPaymentGateway>();
+        
+        //REDIS
+        services.AddSingleton<IConnectionMultiplexer>(_ =>
+        {
+            ConfigurationOptions options = ConfigurationOptions.Parse(
+                configuration.GetConnectionString("Redis") ?? "localhost:6379");
+            options.AbortOnConnectFail = false; 
+
+            return ConnectionMultiplexer.Connect(options);
+        });
+        services.AddScoped<IFavoriteCarStore, RedisFavoriteCarStore>();
         
         return services;
     }
