@@ -23,7 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Validators\Payments\" />
+    <Folder Include="Features\Auth\Commands\" />
+    <Folder Include="Features\Bookings\Commands\" />
+    <Folder Include="Features\Favorites\" />
   </ItemGroup>
 
 </Project>
