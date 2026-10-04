@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 using CarRent.Application.Common.Behaviors;
+using CarRent.Application.Interfaces.Services;
+using CarRent.Application.Services;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +24,8 @@ public static class DependencyInjection
         });
         
         services.AddValidatorsFromAssembly(applicationAssembly);
+        
+        services.AddScoped<IPaymentConfirmationService, PaymentConfirmationService>();
 
         return services;
     }

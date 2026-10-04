@@ -60,9 +60,12 @@ public static class DependencyInjection
         //EXTERNAL AUTH
         services.Configure<GoogleSettings>(configuration.GetSection(GoogleSettings.SectionName));
         services.AddScoped<IExternalAuthProvider, GoogleAuthProvider>();
-        
         services.Configure<GitHubSettings>(configuration.GetSection(GitHubSettings.SectionName));
         services.AddScoped<IExternalAuthProvider, GitHubAuthProvider>();
+        
+        //PAYPAL
+        services.Configure<PayPalSettings>(configuration.GetSection(PayPalSettings.SectionName));
+        services.AddHttpClient<IPaymentGateway, PayPalPaymentGateway>();
         
         return services;
     }
