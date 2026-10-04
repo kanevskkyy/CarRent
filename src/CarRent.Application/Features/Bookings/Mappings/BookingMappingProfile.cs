@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using CarRent.Application.DTOs.Bookings;
 using CarRent.Domain.Entities;
 
@@ -16,6 +16,14 @@ public class BookingMappingProfile : Profile
             .ForMember(dest => dest.Day, opt => opt.MapFrom(src => src.Key))
             .ForMember(dest => dest.Count, opt => opt.MapFrom(src => src.Value));
 
-        CreateMap<CreateBookingRequest, Booking>();
+        CreateMap<CreateBookingRequest, Booking>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.UserId, opt => opt.Ignore())
+            .ForMember(dest => dest.User, opt => opt.Ignore())
+            .ForMember(dest => dest.Car, opt => opt.Ignore())
+            .ForMember(dest => dest.Status, opt => opt.Ignore())
+            .ForMember(dest => dest.TotalPrice, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.Payment, opt => opt.Ignore());
     }
 }
