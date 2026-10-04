@@ -1,4 +1,4 @@
-﻿using CarRent.Domain.Entities;
+using CarRent.Domain.Entities;
 using CarRent.Infrastructure.Persistence.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -16,6 +16,7 @@ public class CarRentDbContext: IdentityDbContext<User, IdentityRole<Guid>, Guid>
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<Car> Cars { get; set; }
     public DbSet<Payment> Payments { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

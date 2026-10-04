@@ -1,13 +1,17 @@
 using System.Reflection;
+using System.Text;
 using System.Text.Json.Serialization;
 using CarRent.Api.Middleware;
 using CarRent.Application;
+using CarRent.Application.Common.Settings;
 using CarRent.Domain.Entities;
 using CarRent.Infrastructure;
 using CarRent.Infrastructure.Persistence;
 using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.OpenApi.Models; 
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 Env.Load();
 
@@ -24,9 +28,46 @@ builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
 builder.Services
-    .AddIdentity<User, IdentityRole<Guid>>()
+    .AddIdentity<User, IdentityRole<Guid>>(options =>
+    {
+        // Password policy is enforced by our FluentValidation validators
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredLength = 8;
+    })
     .AddEntityFrameworkStores<CarRentDbContext>()
     .AddDefaultTokenProviders();
+
+// JWT Authentication
+JwtSettings jwtSettings = builder.Configuration
+    .GetSection(JwtSettings.SectionName)
+    .Get<JwtSettings>() ?? throw new InvalidOperationException("JwtSettings are not configured.");
+
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings.Issuer,
+            ValidAudience = jwtSettings.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -49,11 +90,11 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
+        Type = SecuritySchemeType.Http,
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Enter JWT token in format: Bearer {your_token}"
+        Description = "Enter your JWT access token (without 'Bearer' prefix)."
     });
 
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -94,7 +135,7 @@ app.MapControllers();
 
 using (IServiceScope scope = app.Services.CreateScope())
 {
-    IEnumerable<CarRent.Application.Interfaces.Services.IDbSeeder> seeders = 
+    IEnumerable<CarRent.Application.Interfaces.Services.IDbSeeder> seeders =
         scope.ServiceProvider.GetServices<CarRent.Application.Interfaces.Services.IDbSeeder>();
     foreach (CarRent.Application.Interfaces.Services.IDbSeeder seeder in seeders)
     {

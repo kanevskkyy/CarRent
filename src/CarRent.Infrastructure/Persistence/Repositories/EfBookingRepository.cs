@@ -14,6 +14,28 @@ public class EfBookingRepository : EfGenericRepository<Booking>, IBookingReposit
     {
     }
     
+    public async Task<int> CancelExpiredPendingBookingsAsync(TimeSpan expirationTimeout, CancellationToken cancellationToken = default)
+    {
+        DateTime cutoffTime = DateTime.UtcNow.Subtract(expirationTimeout);
+        
+        List<Booking> expiredBookings = await dbSet
+            .Where(b => b.Status == BookingStatus.Pending && b.CreatedAt <= cutoffTime)
+            .ToListAsync(cancellationToken);
+
+        if (!expiredBookings.Any())
+        {
+            return 0;
+        }
+
+        foreach (Booking booking in expiredBookings)
+        {
+            booking.Status = BookingStatus.Cancelled;
+        }
+
+        await context.SaveChangesAsync(cancellationToken);
+        return expiredBookings.Count;
+    }
+    
     public async Task<bool> IsCarAvailableAsync(Guid carId, DateTime startDate, DateTime endDate, CancellationToken cancellationToken = default)
     {
         BookingStatus[] activeStatuses = new[]

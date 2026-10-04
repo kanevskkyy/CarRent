@@ -1,4 +1,4 @@
-﻿using CarRent.Domain.Enums;
+using CarRent.Domain.Enums;
 using DriveType = CarRent.Domain.Enums.DriveType;
 
 namespace CarRent.Domain.Entities;
@@ -7,7 +7,7 @@ public class Car
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public int Year { get; set; }
     public decimal DailyPrice { get; set; }
 
@@ -18,7 +18,7 @@ public class Car
 
     public int HorsePower { get; set; }
     
-    public string PhotoUrl { get; set; }
+    public string PhotoUrl { get; set; } = string.Empty;
     public int SeatsCount { get; set; }
     public int TrunkVolumeLiters { get; set; }
     

@@ -59,7 +59,6 @@ public class UserSeeder : IDbSeeder
             return;
         }
 
-        // 1. Seed Admin
         string adminEmail = "admin@carrent.com";
         User adminUser = new()
         {
@@ -86,7 +85,6 @@ public class UserSeeder : IDbSeeder
                 string.Join(", ", createAdminResult.Errors.Select(e => e.Description)));
         }
 
-        // 2. Seed Regular User
         string userEmail = "user@carrent.com";
         User regularUser = new()
         {

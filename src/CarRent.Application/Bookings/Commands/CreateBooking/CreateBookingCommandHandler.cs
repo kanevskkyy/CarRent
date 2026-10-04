@@ -20,9 +20,6 @@ public class CreateBookingCommandHandler : ICommandHandler<CreateBookingCommand,
 
     public async Task<BookingListResponse> Handle(CreateBookingCommand command, CancellationToken cancellationToken)
     {
-        if (command.Request.StartDate >= command.Request.EndDate)
-            throw new ValidationException("Start date must be before end date.");
-
         Car? car = await _unitOfWork.Cars.GetByIdAsync(command.Request.CarId, cancellationToken);
         if (car == null)
             throw new NotFoundException($"Car with id {command.Request.CarId} not found.");

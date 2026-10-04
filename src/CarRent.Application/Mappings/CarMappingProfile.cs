@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CarRent.Application.DTOs.Bookings;
 using CarRent.Application.DTOs.Cars;
 using CarRent.Domain.Entities;
 
@@ -15,6 +16,8 @@ public class CarMappingProfile : Profile
             .ForMember(dest => dest.IsDriverLicenseVerified, opt => opt.Ignore()); 
 
         CreateMap<Booking, CarBookingResponse>();
+        
+        CreateMap<Car, BookingCarResponse>();
 
         CreateMap<CreateCarRequest, Car>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())

@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace CarRent.Application.Services;
 
-public class CurrentUserService : ICurrentUserService
+public class UserIdentityClaimsService : IUserClaimsService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CurrentUserService(IHttpContextAccessor httpContextAccessor)
+    public UserIdentityClaimsService(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
     }

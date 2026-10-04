@@ -19,16 +19,16 @@ namespace CarRent.Api.Controllers;
 public class BookingsController : ControllerBase
 {
     private readonly ISender _sender;
-    private readonly ICurrentUserService _currentUserService;
+    private readonly IUserClaimsService _userClaimsService;
     private readonly ILogger<BookingsController> _logger;
 
     public BookingsController(
         ISender sender, 
-        ICurrentUserService currentUserService, 
+        IUserClaimsService userClaimsService, 
         ILogger<BookingsController> logger)
     {
         _sender = sender;
-        _currentUserService = currentUserService;
+        _userClaimsService = userClaimsService;
         _logger = logger;
     }
 
@@ -44,8 +44,8 @@ public class BookingsController : ControllerBase
         [FromQuery] BookingFilterModel filter, 
         CancellationToken cancellationToken)
     {
-        Guid userId = _currentUserService.UserId;
-        bool isAdmin = _currentUserService.IsAdmin;
+        Guid userId = _userClaimsService.UserId;
+        bool isAdmin = _userClaimsService.IsAdmin;
 
         _logger.LogInformation("Fetching paged bookings for User ID: {UserId}, IsAdmin: {IsAdmin}", userId, isAdmin);
 
@@ -66,7 +66,7 @@ public class BookingsController : ControllerBase
         [FromBody] CreateBookingRequest request, 
         CancellationToken cancellationToken)
     {
-        Guid userId = _currentUserService.UserId;
+        Guid userId = _userClaimsService.UserId;
 
         _logger.LogInformation("Creating booking for Car ID: {CarId} by User ID: {UserId}", request.CarId, userId);
 
@@ -87,8 +87,8 @@ public class BookingsController : ControllerBase
     [HttpPost("{id:guid}/cancel")]
     public async Task<ActionResult> Cancel(Guid id, CancellationToken cancellationToken)
     {
-        Guid userId = _currentUserService.UserId;
-        bool isAdmin = _currentUserService.IsAdmin;
+        Guid userId = _userClaimsService.UserId;
+        bool isAdmin = _userClaimsService.IsAdmin;
 
         _logger.LogInformation("Cancelling booking with ID: {Id} by User ID: {UserId}", id, userId);
 

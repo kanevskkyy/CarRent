@@ -1,4 +1,7 @@
 ﻿using System.Reflection;
+using CarRent.Application.Common.Behaviors;
+using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CarRent.Application;
@@ -12,8 +15,13 @@ public static class DependencyInjection
         services.AddAutoMapper(cfg => 
             cfg.AddMaps(applicationAssembly));
         
-        services.AddMediatR(cfg => 
-            cfg.RegisterServicesFromAssembly(applicationAssembly));
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(applicationAssembly);
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));;
+        });
+        
+        services.AddValidatorsFromAssembly(applicationAssembly);
 
         return services;
     }
