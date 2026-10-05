@@ -9,7 +9,8 @@ public class CarMappingProfile : Profile
 {
     public CarMappingProfile()
     {
-        CreateMap<Car, CarListResponse>();
+        CreateMap<Car, CarListResponse>()
+            .ForMember(d => d.IsFavorite, o => o.Ignore());
 
         CreateMap<Car, CarDetailResponse>()
             .ForMember(dest => dest.Bookings, opt => opt.MapFrom(src => src.Bookings))

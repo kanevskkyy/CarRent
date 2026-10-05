@@ -4,6 +4,8 @@ using CarRent.Application.Cars.Commands.UpdateCar;
 using CarRent.Application.Cars.Queries.GetCarById;
 using CarRent.Application.Cars.Queries.GetPagedCars;
 using CarRent.Application.DTOs.Cars;
+using CarRent.Application.Features.Cars.Queries.GetPopularCars;
+using CarRent.Application.Interfaces.Services;
 using CarRent.Application.Models.Cars;
 using CarRent.Application.Models.Pagination;
 using MediatR;
@@ -18,11 +20,13 @@ public class CarsController : ControllerBase
 {
     private readonly ISender _sender;
     private readonly ILogger<CarsController> _logger;
+    private IUserClaimsService _userClaimsService;
 
-    public CarsController(ISender sender, ILogger<CarsController> logger)
+    public CarsController(ISender sender, ILogger<CarsController> logger, IUserClaimsService userClaimsService)
     {
         _sender = sender;
         _logger = logger;
+        _userClaimsService = userClaimsService;
     }
 
     /// <summary>
@@ -33,11 +37,13 @@ public class CarsController : ControllerBase
     /// <returns>Paged list of cars.</returns>
     [HttpGet]
     [AllowAnonymous]
-    public async Task<ActionResult<PagedList<CarListResponse>>> GetPagedCars([FromQuery] CarFilterModel filter,
+    public async Task<ActionResult<PagedList<CarListResponse>>> GetPagedCars(
+        [FromQuery] CarFilterModel filter,
         CancellationToken cancellationToken)
     {
         _logger.LogInformation("Fetching paged cars with filters.");
-        GetPagedCarsQuery query = new GetPagedCarsQuery(filter);
+
+        GetPagedCarsQuery query = new GetPagedCarsQuery(filter, _userClaimsService.UserId);
         PagedList<CarListResponse> result = await _sender.Send(query, cancellationToken);
 
         return Ok(result);
@@ -135,5 +141,21 @@ public class CarsController : ControllerBase
 
         _logger.LogInformation("Car with ID {Id} deleted.", id);
         return NoContent();
+    }
+    
+    /// <summary>
+    /// Get the most booked cars (for the home page). Counts confirmed and completed bookings.
+    /// </summary>
+    /// <param name="count">How many cars to return (1-10, default 3).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    [HttpGet("popular-cars")]
+    [AllowAnonymous]
+    public async Task<ActionResult<List<CarListResponse>>> GetPopularCars(
+        [FromQuery] int count = 3,
+        CancellationToken cancellationToken = default)
+    {
+        List<CarListResponse> result = await _sender.Send(new GetPopularCarsQuery(count), cancellationToken);
+
+        return Ok(result);
     }
 }

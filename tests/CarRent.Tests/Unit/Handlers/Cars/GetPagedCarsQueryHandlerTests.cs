@@ -2,6 +2,7 @@ using AutoMapper;
 using CarRent.Application.Cars.Queries.GetPagedCars;
 using CarRent.Application.DTOs.Cars;
 using CarRent.Application.Interfaces.Repositories;
+using CarRent.Application.Interfaces.Services;
 using CarRent.Application.Models.Cars;
 using CarRent.Application.Models.Pagination;
 using CarRent.Domain.Entities;
@@ -18,15 +19,63 @@ public class GetPagedCarsQueryHandlerTests
     private readonly Mock<ICarRepository> _carRepoMock;
     private readonly IMapper _mapper;
     private readonly GetPagedCarsQueryHandler _handler;
+    private readonly Mock<IFavoriteCarStore> _favoritesMock;
 
     public GetPagedCarsQueryHandlerTests()
     {
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _carRepoMock = new Mock<ICarRepository>();
+        _favoritesMock = new Mock<IFavoriteCarStore>();
         _unitOfWorkMock.Setup(u => u.Cars).Returns(_carRepoMock.Object);
         _mapper = TestHelper.CreateMapper();
 
-        _handler = new GetPagedCarsQueryHandler(_unitOfWorkMock.Object, _mapper);
+        _handler = new GetPagedCarsQueryHandler(_unitOfWorkMock.Object, _mapper, _favoritesMock.Object);
+    }
+    
+    [Fact]
+    public async Task Handle_WhenUserIsLoggedIn_MarksFavoriteCars()
+    {
+        // Arrange
+        Guid userId = Guid.NewGuid();
+        Car liked = TestHelper.CreateTestCar();
+        Car notLiked = TestHelper.CreateTestCar();
+        CarFilterModel filter = new();
+
+        _carRepoMock
+            .Setup(c => c.GetPagedCarsWithFiltersAsync(filter, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new PagedList<Car>(new List<Car> { liked, notLiked }, 2, 1, 10));
+
+        _favoritesMock
+            .Setup(f => f.GetFavoriteIdsAsync(userId, It.IsAny<IEnumerable<Guid>>()))
+            .ReturnsAsync(new HashSet<Guid> { liked.Id });
+
+        // Act
+        PagedList<CarListResponse> result =
+            await _handler.Handle(new GetPagedCarsQuery(filter, userId), CancellationToken.None);
+
+        // Assert
+        result.Items.Single(c => c.Id == liked.Id).IsFavorite.Should().BeTrue();
+        result.Items.Single(c => c.Id == notLiked.Id).IsFavorite.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Handle_WhenAnonymous_DoesNotCallRedis()
+    {
+        // Arrange
+        CarFilterModel filter = new();
+        _carRepoMock
+            .Setup(c => c.GetPagedCarsWithFiltersAsync(filter, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new PagedList<Car>(new List<Car> { TestHelper.CreateTestCar() }, 1, 1, 10));
+
+        // Act
+        PagedList<CarListResponse> result =
+            await _handler.Handle(new GetPagedCarsQuery(filter), CancellationToken.None);
+
+        // Assert
+        result.Items.Should().OnlyContain(c => !c.IsFavorite);
+        _favoritesMock.Verify(
+            f => f.GetFavoriteIdsAsync(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()),
+            Times.Never);
     }
 
     [Fact]

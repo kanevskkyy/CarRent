@@ -13,6 +13,33 @@ public class RedisFavoriteCarStore : IFavoriteCarStore
     }
 
     private static string Key(Guid userId) => $"favorites:{userId}";
+    
+    public async Task<HashSet<Guid>> GetFavoriteIdsAsync(Guid userId, IEnumerable<Guid> carIds)
+    {
+        Guid[] ids = carIds.ToArray();
+        if (ids.Length == 0)
+            return new HashSet<Guid>();
+
+        string key = Key(userId);
+
+        // one batch = one network round trip
+        IBatch batch = _db.CreateBatch();
+        Task<double?>[] tasks = ids
+            .Select(id => batch.SortedSetScoreAsync(key, id.ToString()))
+            .ToArray();
+        batch.Execute();
+
+        await Task.WhenAll(tasks);
+
+        HashSet<Guid> result = new();
+        for (int i = 0; i < ids.Length; i++)
+        {
+            if (tasks[i].Result.HasValue)
+                result.Add(ids[i]);
+        }
+
+        return result;
+    }
 
     public async Task AddAsync(Guid userId, Guid carId)
     {

@@ -14,6 +14,40 @@ public class EfBookingRepository : EfGenericRepository<Booking>, IBookingReposit
     {
     }
     
+    public async Task<IReadOnlyList<Car>> GetMostBookedCarsAsync(
+        int count, CancellationToken cancellationToken = default)
+    {
+        BookingStatus[] countedStatuses = new[]
+        {
+            BookingStatus.Confirmed,
+            BookingStatus.Completed
+        };
+
+        List<Guid> topCarIds = await dbSet
+            .AsNoTracking()
+            .Where(b => countedStatuses.Contains(b.Status))
+            .GroupBy(b => b.CarId)
+            .OrderByDescending(g => g.Count())
+            .ThenBy(g => g.Key) // stable order when counts are equal
+            .Select(g => g.Key)
+            .Take(count)
+            .ToListAsync(cancellationToken);
+
+        if (topCarIds.Count == 0)
+            return Array.Empty<Car>();
+
+        List<Car> cars = await context.Set<Car>()
+            .AsNoTracking()
+            .Where(c => topCarIds.Contains(c.Id))
+            .ToListAsync(cancellationToken);
+
+        return topCarIds
+            .Select(id => cars.FirstOrDefault(c => c.Id == id))
+            .Where(c => c is not null)
+            .Select(c => c!)
+            .ToList();
+    }
+    
     public async Task<int> CancelExpiredPendingBookingsAsync(TimeSpan expirationTimeout, CancellationToken cancellationToken = default)
     {
         DateTime cutoffTime = DateTime.UtcNow.Subtract(expirationTimeout);

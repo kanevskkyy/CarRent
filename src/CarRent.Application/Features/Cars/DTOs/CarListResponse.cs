@@ -12,5 +12,6 @@ public class CarListResponse
     public EngineType EngineType { get; set; }
     public int SeatsCount { get; set; }
     public int Year { get; set; }
+    public bool IsFavorite { get; set; }
     public string PhotoUrl { get; set; } = string.Empty;
 }

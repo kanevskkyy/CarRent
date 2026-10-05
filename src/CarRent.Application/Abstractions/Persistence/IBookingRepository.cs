@@ -6,6 +6,7 @@ namespace CarRent.Application.Interfaces.Repositories;
 
 public interface IBookingRepository : IGenericRepository<Booking>
 {
+    Task<IReadOnlyList<Car>> GetMostBookedCarsAsync(int count, CancellationToken cancellationToken = default);
     Task<bool> IsCarAvailableAsync(Guid carId, DateTime startDate, DateTime endDate, CancellationToken cancellationToken = default);
     Task<PagedList<Booking>> GetPagedBookingsWithFiltersAsync(BookingFilterModel parameters, CancellationToken cancellationToken = default);
     Task<IReadOnlyDictionary<string, int>> GetDailyBookingCountsForLast48HoursAsync(CancellationToken cancellationToken = default);
