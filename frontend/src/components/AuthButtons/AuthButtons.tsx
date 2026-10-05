@@ -1,3 +1,4 @@
+import i18n from '../../i18n';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiLogOut, FiUser } from 'react-icons/fi';
 import { logout } from '../../api/authApi';
@@ -27,16 +28,16 @@ export default function AuthButtons() {
     if (!user) {
         return (
             <div className={s.wrap}>
-                <Link to="/login" className={s.login}>Вхід</Link>
-                <Link to="/register" className={s.register}>Реєстрація</Link>
+                <Link to="/login" className={s.login}>{i18n.t("Вхід")}</Link>
+                <Link to="/register" className={s.register}>{i18n.t("Реєстрація")}</Link>
             </div>
         );
     }
 
     return (
         <div className={s.wrap}>
-            <Link to="/account" className={s.account}><FiUser /> <span>Акаунт</span></Link>
-            <button className={s.logout} onClick={handleLogout} aria-label="Вийти"><FiLogOut /></button>
+            <Link to="/account" className={s.account}><FiUser /> <span>{i18n.t("Акаунт")}</span></Link>
+            <button className={s.logout} onClick={handleLogout} aria-label={i18n.t("Вийти")}><FiLogOut /></button>
         </div>
     );
 }

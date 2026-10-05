@@ -1,3 +1,4 @@
+import i18n from '../../i18n';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { FaGithub } from 'react-icons/fa';
@@ -18,7 +19,7 @@ export default function GitHubCallbackPage() {
 
         const code = params.get('code');
         if (!code) {
-            setError('GitHub не повернув код авторизації.');
+            setError(i18n.t("GitHub не повернув код авторизації."));
             return;
         }
 
@@ -34,8 +35,8 @@ export default function GitHubCallbackPage() {
     }, []);
 
     return (
-        <StatusCard icon={<FaGithub />} title={error ? 'Не вдалося увійти' : 'Входимо через GitHub...'} text={error ?? undefined}>
-            {error && <Link to="/login">Спробувати ще раз</Link>}
+        <StatusCard icon={<FaGithub />} title={error ? i18n.t("Не вдалося увійти") : i18n.t("Входимо через GitHub...")} text={error ?? undefined}>
+            {error && <Link to="/login">{i18n.t("Спробувати ще раз")}</Link>}
         </StatusCard>
     );
 }

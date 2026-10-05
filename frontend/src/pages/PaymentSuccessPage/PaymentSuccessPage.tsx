@@ -1,3 +1,4 @@
+import i18n from '../../i18n';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiCheckCircle, FiClock, FiXCircle } from 'react-icons/fi';
@@ -51,26 +52,26 @@ export default function PaymentSuccessPage() {
 
     if (state === 'confirmed') {
         return (
-            <StatusCard icon={<FiCheckCircle />} title="Оплату отримано" text="Бронювання підтверджено. Ключ чекає на вас у терміналі.">
-                <Link to="/catalog">До каталогу</Link>
+            <StatusCard icon={<FiCheckCircle />} title={i18n.t("Оплату отримано")} text={i18n.t("Бронювання підтверджено. Ключ чекає на вас у терміналі.")}>
+                <Link to="/catalog">{i18n.t("До каталогу")}</Link>
             </StatusCard>
         );
     }
     if (state === 'cancelled') {
         return (
-            <StatusCard icon={<FiXCircle />} title="Бронювання скасовано"
-                        text="Час на оплату минув. Якщо гроші були списані, вони повернуться автоматично.">
-                <Link to="/catalog">До каталогу</Link>
+            <StatusCard icon={<FiXCircle />} title={i18n.t("Бронювання скасовано")}
+                        text={i18n.t("Час на оплату минув. Якщо гроші були списані, вони повернуться автоматично.")}>
+                <Link to="/catalog">{i18n.t("До каталогу")}</Link>
             </StatusCard>
         );
     }
     if (state === 'timeout' || state === 'unknown') {
         return (
-            <StatusCard icon={<FiClock />} title="Оплату ще обробляємо"
-                        text="Підтвердження може прийти за кілька хвилин. Статус бронювання можна перевірити пізніше.">
-                <Link to="/">На головну</Link>
+            <StatusCard icon={<FiClock />} title={i18n.t("Оплату ще обробляємо")}
+                        text={i18n.t("Підтвердження може прийти за кілька хвилин. Статус бронювання можна перевірити пізніше.")}>
+                <Link to="/">{i18n.t("На головну")}</Link>
             </StatusCard>
         );
     }
-    return <StatusCard icon={<FiClock />} title="Перевіряємо оплату..." text="Це займе кілька секунд." />;
+    return <StatusCard icon={<FiClock />} title={i18n.t("Перевіряємо оплату...")} text={i18n.t("Це займе кілька секунд.")} />;
 }

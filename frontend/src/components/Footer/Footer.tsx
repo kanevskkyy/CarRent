@@ -1,3 +1,4 @@
+import i18n from '../../i18n';
 import { Link } from 'react-router-dom';
 import Logo from '../Logo/Logo';
 import s from './Footer.module.css';
@@ -7,13 +8,13 @@ export default function Footer() {
         <footer className={`container ${s.footer}`}>
             <div className={`panel ${s.inner}`}>
                 <Logo />
-                <p className={s.text}>Оренда авто в аеропорту Бориспіль та Києві.</p>
+                <p className={s.text}>{i18n.t("Оренда авто в аеропорту Бориспіль та Києві.")}</p>
                 <div className={s.links}>
-                    <Link to="/catalog">Каталог</Link>
-                    <Link to="/favorites">Вподобані</Link>
-                    <Link to="/account">Акаунт</Link>
+                    <Link to="/catalog">{i18n.t("Каталог")}</Link>
+                    <Link to="/favorites">{i18n.t("Вподобані")}</Link>
+                    <Link to="/account">{i18n.t("Акаунт")}</Link>
                 </div>
-                <p className={s.text}>© {new Date().getFullYear()} CarRent. Усі права захищено.</p>
+                <p className={s.text}>© {new Date().getFullYear()} CarRent. {i18n.t('Усі права захищено.')}</p>
             </div>
         </footer>
     );
