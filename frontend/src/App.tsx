@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import RequireAuth from './components/RequireAuth/RequireAuth';
@@ -11,6 +12,7 @@ import PaymentSuccessPage from './pages/PaymentSuccessPage/PaymentSuccessPage';
 import PaymentCancelPage from './pages/PaymentCancelPage/PaymentCancelPage';
 
 export default function App() {
+    useTranslation();
     return (
         <Routes>
             <Route path="/login" element={<LoginPage mode="login" />} />

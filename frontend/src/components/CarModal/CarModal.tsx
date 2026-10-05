@@ -1,3 +1,4 @@
+import i18n from '../../i18n';
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -97,35 +98,35 @@ export default function CarModal({ carId, onClose }: { carId: string; onClose: (
         }
     }
 
-    const buttonLabel = !user ? 'Увійти' : !verified ? 'Завантажити посвідчення' : 'Продовжити до оплати';
+    const buttonLabel = !user ? i18n.t("Увійти") : !verified ? i18n.t("Завантажити посвідчення") : i18n.t("Продовжити до оплати");
     const disabled = busy || (verified && (!datesValid || overlaps));
 
     return createPortal(
         <div className={s.overlay} onClick={onClose}>
             <div className={s.modal} onClick={(e) => e.stopPropagation()}>
-                <button className={s.close} onClick={onClose} aria-label="Закрити"><FiX /></button>
+                <button className={s.close} onClick={onClose} aria-label={i18n.t("Закрити")}><FiX /></button>
 
                 {!car ? (
-                    <p className={s.loading}>{loadFailed ? 'Не вдалося завантажити авто.' : 'Завантаження...'}</p>
+                    <p className={s.loading}>{loadFailed ? i18n.t("Не вдалося завантажити авто.") : i18n.t("Завантаження...")}</p>
                 ) : (
                     <>
                         <div className={s.left}>
-                            <span className={s.kicker}>Spec sheet</span>
+                            <span className={s.kicker}>{i18n.t('Spec sheet')}</span>
                             <h2>{car.name}</h2>
                             <img className={s.photo} src={car.photoUrl} alt={car.name} />
 
                             <div className={s.specs}>
-                                <Spec label="Двигун" value={`${engineLabel(car.engineType)} · ${car.horsePower} к.с.`} />
-                                <Spec label="Привід" value={driveLabel(car.driveType)} />
-                                <Spec label="Рік" value={String(car.year)} />
-                                <Spec label="Коробка" value={transmissionLabel(car.transmissionType)} />
-                                <Spec label="Місць" value={String(car.seatsCount)} />
-                                <Spec label="Багажник" value={`${car.trunkVolumeLiters} л`} />
+                                <Spec label={i18n.t("Двигун")} value={`${engineLabel(car.engineType)} · ${car.horsePower} к.с.`} />
+                                <Spec label={i18n.t("Привід")} value={driveLabel(car.driveType)} />
+                                <Spec label={i18n.t("Рік")} value={String(car.year)} />
+                                <Spec label={i18n.t("Коробка")} value={transmissionLabel(car.transmissionType)} />
+                                <Spec label={i18n.t("Місць")} value={String(car.seatsCount)} />
+                                <Spec label={i18n.t("Багажник")} value={`${car.trunkVolumeLiters} л`} />
                             </div>
 
                             {car.bookings.length > 0 && (
                                 <div className={s.busy}>
-                                    <span className={s.kicker}>Зайняті періоди</span>
+                                    <span className={s.kicker}>{i18n.t("Зайняті періоди")}</span>
                                     {car.bookings.map((b) => (
                                         <div key={b.id} className={s.period}>
                                             {formatMoment(parseUtc(b.startDate))} — {formatMoment(parseUtc(b.endDate))}
@@ -137,16 +138,16 @@ export default function CarModal({ carId, onClose }: { carId: string; onClose: (
 
                         <div className={s.right}>
                             <div className={s.price}>
-                                <strong>{car.dailyPrice.toLocaleString('uk-UA')} ₴</strong> <span>/ день</span>
+                                <strong>{car.dailyPrice.toLocaleString(i18n.language === 'uk' ? 'uk-UA' : 'en-US')} ₴</strong> <span>{i18n.t("/ день")}</span>
                             </div>
 
                             <label className={s.field}>
-                                <small>Отримати</small>
+                                <small>{i18n.t("Отримати")}</small>
                                 <input type="datetime-local" value={range.start}
                                        onChange={(e) => setRange({ ...range, start: e.target.value })} />
                             </label>
                             <label className={s.field}>
-                                <small>Повернути</small>
+                                <small>{i18n.t("Повернути")}</small>
                                 <input type="datetime-local" value={range.end}
                                        onChange={(e) => setRange({ ...range, end: e.target.value })} />
                             </label>
@@ -154,25 +155,25 @@ export default function CarModal({ carId, onClose }: { carId: string; onClose: (
                             <div className={s.note}>
                                 {verified ? <FiCheckCircle className={s.ok} /> : <FiAlertTriangle className={s.warn} />}
                                 <span>
-                  {!user ? 'Увійдіть, щоб орендувати'
-                      : verified ? 'Посвідчення перевірено'
-                          : 'Завантажте посвідчення водія'}
+                  {!user ? i18n.t("Увійдіть, щоб орендувати")
+                      : verified ? i18n.t("Посвідчення перевірено")
+                          : i18n.t("Завантажте посвідчення водія")}
                 </span>
                             </div>
 
-                            {verified && !datesValid && <p className={s.error}>Оберіть коректні дати в майбутньому.</p>}
-                            {verified && datesValid && overlaps && <p className={s.error}>На ці дати авто вже зайняте.</p>}
+                            {verified && !datesValid && <p className={s.error}>{i18n.t("Оберіть коректні дати в майбутньому.")}</p>}
+                            {verified && datesValid && overlaps && <p className={s.error}>{i18n.t("На ці дати авто вже зайняте.")}</p>}
                             {error && <p className={s.error}>{error}</p>}
 
                             <div className={s.bottom}>
                                 <div className={s.total}>
-                                    <span>Разом · {datesValid ? days : 0} дн.</span>
-                                    <strong>{total.toLocaleString('uk-UA')} ₴</strong>
+                                    <span>{i18n.t('Разом · {{count}} дн.', { count: datesValid ? days : 0 })}</span>
+                                    <strong>{total.toLocaleString(i18n.language === 'uk' ? 'uk-UA' : 'en-US')} ₴</strong>
                                 </div>
                                 <button className={s.pay} onClick={handleContinue} disabled={disabled}>
-                                    {busy ? 'Зачекайте...' : buttonLabel}
+                                    {busy ? i18n.t("Зачекайте...") : buttonLabel}
                                 </button>
-                                <small className={s.hint}>Оплата через PayPal</small>
+                                <small className={s.hint}>{i18n.t("Оплата через PayPal")}</small>
                             </div>
                         </div>
                     </>

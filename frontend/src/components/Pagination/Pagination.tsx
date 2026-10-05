@@ -1,3 +1,4 @@
+import i18n from '../../i18n';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import s from './Pagination.module.css';
 
@@ -9,7 +10,7 @@ export default function Pagination({ page, totalPages, onChange }: Props) {
 
     return (
         <div className={s.wrap}>
-            <button className={s.btn} disabled={page <= 1} onClick={() => onChange(page - 1)} aria-label="Назад">
+            <button className={s.btn} disabled={page <= 1} onClick={() => onChange(page - 1)} aria-label={i18n.t("Назад")}>
                 <FiChevronLeft />
             </button>
             {pages.map((p) => (
@@ -17,7 +18,7 @@ export default function Pagination({ page, totalPages, onChange }: Props) {
                     {p}
                 </button>
             ))}
-            <button className={s.btn} disabled={page >= totalPages} onClick={() => onChange(page + 1)} aria-label="Далі">
+            <button className={s.btn} disabled={page >= totalPages} onClick={() => onChange(page + 1)} aria-label={i18n.t("Далі")}>
                 <FiChevronRight />
             </button>
         </div>

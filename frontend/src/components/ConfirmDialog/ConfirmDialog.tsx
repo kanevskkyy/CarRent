@@ -1,3 +1,4 @@
+import i18n from '../../i18n';
 import { createPortal } from 'react-dom';
 import s from './ConfirmDialog.module.css';
 
@@ -19,9 +20,9 @@ export default function ConfirmDialog({ title, text, confirmLabel, busy, error, 
                 <p>{text}</p>
                 {error && <p className={s.error}>{error}</p>}
                 <div className={s.actions}>
-                    <button className={s.secondary} onClick={onClose} disabled={busy}>Назад</button>
+                    <button className={s.secondary} onClick={onClose} disabled={busy}>{i18n.t("Назад")}</button>
                     <button className={s.danger} onClick={onConfirm} disabled={busy}>
-                        {busy ? 'Зачекайте...' : confirmLabel}
+                        {busy ? i18n.t("Зачекайте...") : confirmLabel}
                     </button>
                 </div>
             </div>

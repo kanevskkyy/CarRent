@@ -1,3 +1,4 @@
+import i18n from '../../i18n';
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 import type { DailyBookingCount } from '../../types';
 import { dayFull, dayShort } from '../../utils/labels';
@@ -15,7 +16,7 @@ function ChartTooltip({ active, payload }: TooltipProps) {
     return (
         <div className={s.tooltip}>
             <strong>{dayFull(day)}</strong>
-            <span>{count} бронювань</span>
+            <span>{i18n.t('{{count}} бронювань', { count })}</span>
         </div>
     );
 }

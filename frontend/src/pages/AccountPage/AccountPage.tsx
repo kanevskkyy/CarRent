@@ -1,3 +1,4 @@
+import i18n from '../../i18n';
 import { useEffect, useState } from 'react';
 import { cancelBooking, fetchMyBookings } from '../../api/bookingsApi';
 import { useAppDispatch } from '../../store/hooks';
@@ -46,8 +47,8 @@ export default function AccountPage() {
         try {
             await cancelBooking(target.id);
             setNotice(target.status === 'Confirmed'
-                ? 'Бронювання скасовано. Повернення коштів через PayPal розпочато.'
-                : 'Бронювання скасовано.');
+                ? i18n.t("Бронювання скасовано. Повернення коштів через PayPal розпочато.")
+                : i18n.t("Бронювання скасовано."));
             setTarget(null);
             dispatch(invalidatePopular());
             setReload((n) => n + 1);
@@ -65,11 +66,11 @@ export default function AccountPage() {
             <LicenseCard />
 
             <section>
-                <h2>Мої бронювання</h2>
+                <h2>{i18n.t("Мої бронювання")}</h2>
 
                 {notice && <p className={s.notice}>{notice}</p>}
-                {error && <p className={s.empty}>Не вдалося завантажити бронювання.</p>}
-                {data && data.items.length === 0 && <p className={s.empty}>У вас ще немає бронювань.</p>}
+                {error && <p className={s.empty}>{i18n.t("Не вдалося завантажити бронювання.")}</p>}
+                {data && data.items.length === 0 && <p className={s.empty}>{i18n.t("У вас ще немає бронювань.")}</p>}
 
                 <div className={s.list}>
                     {data?.items.map((b) => (
@@ -86,11 +87,11 @@ export default function AccountPage() {
 
             {target && (
                 <ConfirmDialog
-                    title="Скасувати бронювання?"
+                    title={i18n.t("Скасувати бронювання?")}
                     text={refund
-                        ? `Оплату ${target.totalPrice.toLocaleString('uk-UA')} ₴ буде повернено повністю на ваш PayPal. Зазвичай це займає від кількох хвилин до кількох днів.`
-                        : 'Бронювання ще не оплачене, тому гроші не списувались.'}
-                    confirmLabel={refund ? 'Скасувати і повернути гроші' : 'Скасувати'}
+                        ? i18n.t('A full refund of {{amount}} ₴ will be sent to your PayPal. It usually takes a few minutes to a few days.', { amount: target.totalPrice.toLocaleString(i18n.language === 'uk' ? 'uk-UA' : 'en-US') })
+                        : i18n.t("Бронювання ще не оплачене, тому гроші не списувались.")}
+                    confirmLabel={refund ? i18n.t("Скасувати і повернути гроші") : i18n.t("Скасувати")}
                     busy={busy}
                     error={cancelError}
                     onConfirm={confirmCancel}

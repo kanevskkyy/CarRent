@@ -1,3 +1,4 @@
+import i18n from '../../i18n';
 import { useEffect, useState } from 'react';
 import { fetchFavorites } from '../../api/favoritesApi';
 import type { Car, PagedList } from '../../types';
@@ -32,12 +33,12 @@ export default function FavoritesPage() {
     return (
         <main className="container">
             <div className={s.top}>
-                <h2>Вподобані</h2>
+                <h2>{i18n.t("Вподобані")}</h2>
                 {data && <Pagination page={data.currentPage} totalPages={data.totalPages} onChange={setPage} />}
             </div>
 
-            {error && <p className={s.empty}>Не вдалося завантажити список.</p>}
-            {data && data.items.length === 0 && <p className={s.empty}>Ви ще нічого не вподобали.</p>}
+            {error && <p className={s.empty}>{i18n.t("Не вдалося завантажити список.")}</p>}
+            {data && data.items.length === 0 && <p className={s.empty}>{i18n.t("Ви ще нічого не вподобали.")}</p>}
 
             {data && (
                 <CarGrid>

@@ -1,3 +1,4 @@
+import i18n from '../../i18n';
 import type { Booking } from '../../types';
 import { formatMoment, parseUtc } from '../../utils/date';
 import { bookingStatusLabel } from '../../utils/labels';
@@ -16,9 +17,9 @@ export default function BookingItem({ booking, onCancel }: Props) {
                 <p>{formatMoment(parseUtc(booking.startDate))} — {formatMoment(parseUtc(booking.endDate))}</p>
             </div>
             <div className={s.side}>
-                <strong>{booking.totalPrice.toLocaleString('uk-UA')} ₴</strong>
+                <strong>{booking.totalPrice.toLocaleString(i18n.language === 'uk' ? 'uk-UA' : 'en-US')} ₴</strong>
                 <span className={`${s.badge} ${s[booking.status]}`}>{bookingStatusLabel(booking.status)}</span>
-                {canCancel && <button className={s.cancel} onClick={() => onCancel(booking)}>Скасувати</button>}
+                {canCancel && <button className={s.cancel} onClick={() => onCancel(booking)}>{i18n.t("Скасувати")}</button>}
             </div>
         </article>
     );

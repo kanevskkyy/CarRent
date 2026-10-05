@@ -1,3 +1,4 @@
+import i18n from '../../i18n';
 import { useEffect, useState } from 'react';
 import { fetchCars, type CarFilter } from '../../api/carsApi';
 import type { Car, PagedList } from '../../types';
@@ -44,10 +45,10 @@ export default function CatalogPage() {
     return (
         <main className={`container ${s.layout}`}>
             <aside className={`panel ${s.filters}`}>
-                <h3>Фільтри</h3>
+                <h3>{i18n.t("Фільтри")}</h3>
 
                 <div className={s.group}>
-                    <small>Тип кузова</small>
+                    <small>{i18n.t("Тип кузова")}</small>
                     {BODY_OPTIONS.map((v) => (
                         <label key={v}>
                             <input type="checkbox" checked={draft.bodyType === v} onChange={() => pick('bodyType', v)} />
@@ -57,7 +58,7 @@ export default function CatalogPage() {
                 </div>
 
                 <div className={s.group}>
-                    <small>Коробка</small>
+                    <small>{i18n.t("Коробка")}</small>
                     {TRANSMISSION_OPTIONS.map((v) => (
                         <label key={v}>
                             <input type="checkbox" checked={draft.transmissionType === v}
@@ -68,8 +69,8 @@ export default function CatalogPage() {
                 </div>
 
                 <div className={s.group}>
-                    <small>Ціна / день</small>
-                    <strong>до {(draft.maxPrice ?? PRICE_MAX).toLocaleString('uk-UA')} ₴</strong>
+                    <small>{i18n.t("Ціна / день")}</small>
+                    <strong>{i18n.t('до')} {(draft.maxPrice ?? PRICE_MAX).toLocaleString(i18n.language === 'uk' ? 'uk-UA' : 'en-US')} ₴</strong>
                     <input
                         type="range" min={500} max={PRICE_MAX} step={100}
                         value={draft.maxPrice ?? PRICE_MAX}
@@ -80,19 +81,19 @@ export default function CatalogPage() {
                     />
                 </div>
 
-                <button className={s.apply} onClick={apply}>Застосувати</button>
+                <button className={s.apply} onClick={apply}>{i18n.t("Застосувати")}</button>
             </aside>
 
             <section>
                 {data && (
                     <div className={s.top}>
-                        <p>{data.totalCount} авто · сторінка <strong>{data.currentPage} з {Math.max(data.totalPages, 1)}</strong></p>
+                        <p>{i18n.t('{{count}} авто · сторінка {{page}} з {{pages}}', { count: data.totalCount, page: data.currentPage, pages: Math.max(data.totalPages, 1) })}</p>
                         <Pagination page={data.currentPage} totalPages={data.totalPages} onChange={setPage} />
                     </div>
                 )}
 
-                {error && <p className={s.empty}>Не вдалося завантажити каталог.</p>}
-                {data && data.items.length === 0 && <p className={s.empty}>Нічого не знайдено.</p>}
+                {error && <p className={s.empty}>{i18n.t("Не вдалося завантажити каталог.")}</p>}
+                {data && data.items.length === 0 && <p className={s.empty}>{i18n.t("Нічого не знайдено.")}</p>}
 
                 {data && (
                     <CarGrid>
