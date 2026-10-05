@@ -1,0 +1,124 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 32px 16px;
+}
+
+.card {
+    width: min(440px, 100%);
+    padding: 28px;
+    border-radius: 2rem;
+}
+
+.tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 6px;
+    border-radius: 1.25rem;
+    background: var(--muted);
+}
+
+.tabs a {
+    padding: 12px;
+    border-radius: 1rem;
+    text-align: center;
+    color: var(--muted-foreground);
+    font-weight: 500;
+}
+
+.tabs .activeTab {
+    background: white;
+    color: var(--ink);
+    box-shadow: 0 2px 6px oklch(0.171 0.021 264 / 10%);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.form input {
+    padding: 16px 20px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: white;
+    font: inherit;
+    outline: none;
+}
+
+.form input:focus {
+    border-color: var(--brand);
+}
+
+.submit {
+    padding: 16px;
+    border-radius: 999px;
+    background: var(--brand);
+    color: var(--primary-foreground);
+    font-weight: 600;
+}
+
+.submit:disabled {
+    opacity: 0.6;
+}
+
+.error {
+    color: var(--like);
+    font-size: 14px;
+    text-align: center;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+.social {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.github {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 360px;
+    padding: 12px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: white;
+    font-weight: 600;
+}
+
+.note {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+}
+
+.back {
+    color: var(--muted-foreground);
+}

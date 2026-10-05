@@ -1,0 +1,27 @@
+.wrap {
+    display: flex;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 999px;
+    background: color-mix(in oklab, white 70%, transparent);
+}
+
+.btn {
+    display: grid;
+    place-items: center;
+    min-width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    font-weight: 600;
+    color: var(--muted-foreground);
+}
+
+.btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.active {
+    background: var(--ink);
+    color: white;
+}

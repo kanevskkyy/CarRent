@@ -1,0 +1,15 @@
+.chart {
+    height: 220px;
+    width: 100%;
+}
+
+.tooltip {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: var(--ink);
+    color: white;
+    font-size: 14px;
+}

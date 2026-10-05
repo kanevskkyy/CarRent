@@ -1,0 +1,32 @@
+.header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 0;
+}
+
+.right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+}
+
+@media (max-width: 1100px) {
+    .header {
+        grid-template-columns: 1fr auto;
+    }
+
+    .nav {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        justify-self: center;
+    }
+}
+
+@media (max-width: 640px) {
+    .right {
+        gap: 6px;
+    }
+}

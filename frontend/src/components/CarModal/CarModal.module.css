@@ -1,0 +1,229 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    overflow-y: auto;
+    background: oklch(0.171 0.021 264 / 45%);
+    backdrop-filter: blur(4px);
+}
+
+.modal {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    width: min(960px, 100%);
+    overflow: hidden;
+    border-radius: 2rem;
+    background: oklch(0.985 0.008 245);
+    box-shadow: var(--shadow-panel);
+}
+
+.close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--muted);
+    font-size: 20px;
+}
+
+.loading {
+    grid-column: 1 / -1;
+    padding: 64px;
+    text-align: center;
+    color: var(--muted-foreground);
+}
+
+.left {
+    padding: 28px;
+}
+
+.kicker {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--brand);
+}
+
+.left h2 {
+    margin: 4px 0 18px;
+    font-size: 28px;
+}
+
+.photo {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: 1.5rem;
+    display: block;
+}
+
+.specs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 28px;
+    margin-top: 20px;
+}
+
+.spec {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border);
+}
+
+.spec span {
+    color: var(--muted-foreground);
+}
+
+.busy {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.period {
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-size: 14px;
+}
+
+.right {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 28px;
+    border-left: 1px solid var(--border);
+    background: oklch(0.992 0.004 245);
+}
+
+.price {
+    padding-right: 48px;
+    font-size: 18px;
+    color: var(--muted-foreground);
+}
+
+.price strong {
+    font: 600 30px "Space Grotesk", sans-serif;
+    color: var(--ink);
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 16px;
+    border-radius: 1.1rem;
+    background: var(--muted);
+}
+
+.field small {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+}
+
+.field input {
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 17px;
+    color: var(--ink);
+    outline: none;
+}
+
+.note {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted-foreground);
+    font-size: 15px;
+}
+
+.note svg {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    padding: 9px;
+    border-radius: 50%;
+}
+
+.ok {
+    background: color-mix(in oklab, var(--success) 15%, white);
+    color: var(--success);
+}
+
+.warn {
+    background: oklch(0.95 0.05 80);
+    color: oklch(0.65 0.15 75);
+}
+
+.error {
+    color: var(--like);
+    font-size: 14px;
+}
+
+.bottom {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.total strong {
+    font-size: 18px;
+}
+
+.pay {
+    padding: 16px;
+    border-radius: 999px;
+    background: var(--brand);
+    color: var(--primary-foreground);
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.pay:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.hint {
+    text-align: center;
+    color: var(--muted-foreground);
+}
+
+@media (max-width: 820px) {
+    .modal {
+        grid-template-columns: 1fr;
+    }
+
+    .right {
+        border-left: 0;
+        border-top: 1px solid var(--border);
+    }
+
+    .specs {
+        grid-template-columns: 1fr;
+    }
+}

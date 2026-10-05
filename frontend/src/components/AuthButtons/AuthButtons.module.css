@@ -1,0 +1,53 @@
+.wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.login {
+    padding: 10px 14px;
+    color: var(--muted-foreground);
+    font-size: 17px;
+}
+
+.register {
+    padding: 12px 20px;
+    border-radius: 999px;
+    background: var(--brand);
+    color: var(--primary-foreground);
+    font-weight: 600;
+}
+
+.account {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: 999px;
+    background: color-mix(in oklab, white 80%, transparent);
+    font-weight: 600;
+}
+
+.logout {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: color-mix(in oklab, white 80%, transparent);
+    font-size: 18px;
+}
+
+@media (max-width: 640px) {
+    .login {
+        display: none;
+    }
+
+    .register {
+        padding: 10px 14px;
+    }
+
+    .account span {
+        display: none;
+    }
+}

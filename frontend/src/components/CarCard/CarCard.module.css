@@ -1,0 +1,86 @@
+.card {
+    overflow: hidden;
+    border-radius: 1.75rem;
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+}
+
+.photo {
+    position: relative;
+    aspect-ratio: 16 / 10;
+}
+
+.photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.like {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: color-mix(in oklab, white 85%, transparent);
+    color: var(--muted-foreground);
+    font-size: 18px;
+}
+
+.liked {
+    color: var(--like);
+}
+
+.body {
+    padding: 20px 20px 22px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.price {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+}
+
+.price span {
+    font-size: 13px;
+    color: var(--muted-foreground);
+}
+
+.meta {
+    margin-top: 4px;
+    color: var(--muted-foreground);
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.tags span {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-size: 14px;
+}
+
+.tags .green {
+    background: color-mix(in oklab, var(--success) 15%, white);
+    color: var(--success);
+}

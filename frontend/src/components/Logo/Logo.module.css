@@ -1,0 +1,33 @@
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mark {
+    display: grid;
+    place-items: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    background: var(--brand);
+    color: var(--primary-foreground);
+    font: 600 22px "Space Grotesk", sans-serif;
+}
+
+.name {
+    display: block;
+    font: 600 20px "Space Grotesk", sans-serif;
+}
+
+.sub {
+    display: block;
+    font-size: 13px;
+    color: var(--muted-foreground);
+}
+
+@media (max-width: 640px) {
+    .sub {
+        display: none;
+    }
+}

@@ -1,4 +1,5 @@
 ﻿using CarRent.Application.DTOs.Payments;
+using CarRent.Application.Features.Payments.Queries.GetPaymentStatus;
 using CarRent.Application.Interfaces.Services;
 using CarRent.Application.Models.Payments;
 using CarRent.Application.Payments.Commands.CreatePayment;
@@ -46,6 +47,18 @@ public class PaymentsController : ControllerBase
 
         CreatePaymentResponse result = await _sender.Send(new CreatePaymentCommand(bookingId, userId), cancellationToken);
 
+        return Ok(result);
+    }
+    
+    /// <summary>
+    /// Booking and payment status (the frontend polls it after returning from PayPal).
+    /// </summary>
+    [HttpGet("bookings/{bookingId:guid}/status")]
+    public async Task<ActionResult<PaymentResponse>> Status(Guid bookingId, CancellationToken cancellationToken)
+    {
+        PaymentResponse result = await _sender.Send(
+            new GetPaymentStatusQuery(bookingId, _userClaimsService.UserId), cancellationToken);
+    
         return Ok(result);
     }
     

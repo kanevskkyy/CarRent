@@ -1,0 +1,147 @@
+.top {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr;
+    gap: 24px;
+}
+
+.hero {
+    padding: 48px 48px 40px;
+}
+
+.badge {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--brand);
+}
+
+.hero h1 {
+    margin-top: 16px;
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1.1;
+}
+
+.lead {
+    margin-top: 20px;
+    max-width: 560px;
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+}
+
+.search {
+    display: flex;
+    align-items: stretch;
+    margin-top: 36px;
+    padding: 8px;
+    border-radius: 1.5rem;
+    background: white;
+    gap: 8px;
+}
+
+.field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 20px;
+}
+
+.field + .field {
+    border-left: 1px solid var(--border);
+}
+
+.field small {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+}
+
+.field span {
+    font-weight: 500;
+}
+
+.find {
+    padding: 0 32px;
+    border-radius: 1.25rem;
+    background: var(--ink);
+    color: white;
+    font-weight: 600;
+}
+
+.stats {
+    padding: 28px;
+}
+
+.statsHead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 20px;
+}
+
+.statsHead small {
+    color: var(--muted-foreground);
+}
+
+.popular {
+    margin-top: 56px;
+}
+
+.popularHead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 20px;
+}
+
+.all {
+    color: var(--brand);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.error {
+    color: var(--muted-foreground);
+    margin-bottom: 16px;
+}
+
+@media (max-width: 1100px) {
+    .top {
+        grid-template-columns: 1fr;
+    }
+
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .hero {
+        padding: 28px 20px;
+    }
+
+    .search {
+        flex-direction: column;
+    }
+
+    .field + .field {
+        border-left: 0;
+        border-top: 1px solid var(--border);
+    }
+
+    .find {
+        padding: 16px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,27 @@
+.nav {
+    display: flex;
+    gap: 4px;
+    padding: 6px;
+    border-radius: 999px;
+    background: color-mix(in oklab, white 70%, transparent);
+}
+
+.link {
+    padding: 10px 20px;
+    border-radius: 999px;
+    color: var(--muted-foreground);
+    font-size: 17px;
+    white-space: nowrap;
+}
+
+.active {
+    background: var(--ink);
+    color: white;
+}
+
+@media (max-width: 900px) {
+    .link {
+        padding: 8px 14px;
+        font-size: 15px;
+    }
+}
