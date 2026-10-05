@@ -1,0 +1,95 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-CarRent_Local_2026!}
+    ports:
+      - "127.0.0.1:${MSSQL_PORT:-1433}:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$${MSSQL_SA_PASSWORD}" -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes", "--save", "60", "1"]
+    ports:
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      Database__ApplyMigrations: "true"
+      ConnectionStrings__DefaultConnection: "Server=db,1433;Database=CarRent;User Id=sa;Password=${MSSQL_SA_PASSWORD:-CarRent_Local_2026!};TrustServerCertificate=True;Encrypt=False"
+      ConnectionStrings__Redis: redis:6379
+      JwtSettings__SecretKey: ${JWT_SECRET_KEY:-CarRent_LocalOnly_ChangeThisSecret_32chars}
+      JwtSettings__Issuer: ${JWT_ISSUER:-CarRent}
+      JwtSettings__Audience: ${JWT_AUDIENCE:-CarRentUsers}
+      Cors__AllowedOrigins__0: http://localhost:3000
+      Cors__AllowedOrigins__1: http://127.0.0.1:3000
+      Cors__AllowedOrigins__2: http://localhost:5173
+      Cors__AllowedOrigins__3: http://127.0.0.1:5173
+      GoogleSettings__ClientId: ${GOOGLE_CLIENT_ID:-}
+      GitHubSettings__ClientId: ${GITHUB_CLIENT_ID:-}
+      GitHubSettings__ClientSecret: ${GITHUB_CLIENT_SECRET:-}
+      GitHubSettings__RedirectUri: ${GITHUB_REDIRECT_URI:-http://localhost:3000/auth/github/callback}
+      CloudinarySettings__CloudName: ${CLOUDINARY_CLOUD_NAME:-}
+      CloudinarySettings__ApiKey: ${CLOUDINARY_API_KEY:-}
+      CloudinarySettings__ApiSecret: ${CLOUDINARY_API_SECRET:-}
+      PayPalSettings__ClientId: ${PAYPAL_CLIENT_ID:-}
+      PayPalSettings__ClientSecret: ${PAYPAL_CLIENT_SECRET:-}
+      PayPalSettings__BaseUrl: ${PAYPAL_BASE_URL:-https://api-m.sandbox.paypal.com}
+      PayPalSettings__Currency: ${PAYPAL_CURRENCY:-USD}
+      PayPalSettings__BrandName: ${PAYPAL_BRAND_NAME:-CarRent}
+      PayPalSettings__ReturnUrl: ${PAYPAL_RETURN_URL:-http://localhost:3000/payment/success}
+      PayPalSettings__CancelUrl: ${PAYPAL_CANCEL_URL:-http://localhost:3000/payment/cancel}
+      PayPalSettings__WebhookId: ${PAYPAL_WEBHOOK_ID:-}
+    ports:
+      - "127.0.0.1:${API_PORT:-8080}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}
+        VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+        VITE_GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+        VITE_GITHUB_REDIRECT_URI: ${GITHUB_REDIRECT_URI:-http://localhost:3000/auth/github/callback}
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-3000}:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  sqlserver-data:
+  redis-data:
+

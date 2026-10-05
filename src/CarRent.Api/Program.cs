@@ -10,6 +10,7 @@ using CarRent.Infrastructure.Persistence;
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -147,6 +148,12 @@ app.MapControllers();
 
 using (IServiceScope scope = app.Services.CreateScope())
 {
+    if (app.Configuration.GetValue<bool>("Database:ApplyMigrations"))
+    {
+        CarRentDbContext dbContext = scope.ServiceProvider.GetRequiredService<CarRentDbContext>();
+        await dbContext.Database.MigrateAsync();
+    }
+
     IEnumerable<CarRent.Application.Interfaces.Services.IDbSeeder> seeders =
         scope.ServiceProvider.GetServices<CarRent.Application.Interfaces.Services.IDbSeeder>();
     foreach (CarRent.Application.Interfaces.Services.IDbSeeder seeder in seeders)

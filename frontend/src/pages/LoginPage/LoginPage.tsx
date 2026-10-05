@@ -9,9 +9,14 @@ import { getErrorMessage } from '../../utils/errors';
 import Logo from '../../components/Logo/Logo';
 import s from './LoginPage.module.css';
 
-const GITHUB_URL =
-    `https://github.com/login/oauth/authorize?client_id=${import.meta.env.VITE_GITHUB_CLIENT_ID}` +
-    `&scope=${encodeURIComponent('read:user user:email')}`;
+const githubAuthorizationUrl = new URL('https://github.com/login/oauth/authorize');
+githubAuthorizationUrl.searchParams.set('client_id', import.meta.env.VITE_GITHUB_CLIENT_ID ?? '');
+githubAuthorizationUrl.searchParams.set('scope', 'read:user user:email');
+githubAuthorizationUrl.searchParams.set(
+    'redirect_uri',
+    import.meta.env.VITE_GITHUB_REDIRECT_URI ?? `${window.location.origin}/auth/github/callback`,
+);
+const GITHUB_URL = githubAuthorizationUrl.toString();
 
 export default function LoginPage({ mode }: { mode: 'login' | 'register' }) {
     const completeLogin = useCompleteLogin();

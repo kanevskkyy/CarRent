@@ -32,7 +32,8 @@ public class GitHubAuthProvider : IExternalAuthProvider
             {
                 client_id = _settings.ClientId,
                 client_secret = _settings.ClientSecret,
-                code
+                code,
+                redirect_uri = _settings.RedirectUri
             })
         };
         tokenRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
