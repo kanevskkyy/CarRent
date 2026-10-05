@@ -36,3 +36,13 @@
         grid-template-columns: 1fr;
     }
 }
+
+@media (max-width: 640px) {
+    .layout {
+        gap: 20px;
+    }
+
+    .notice {
+        overflow-wrap: anywhere;
+    }
+}

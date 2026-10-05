@@ -38,3 +38,20 @@
     color: var(--primary-foreground);
     font-weight: 600;
 }
+
+@media (max-width: 480px) {
+    .card {
+        margin: 24px auto;
+        padding: 28px 20px;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .actions a,
+    .actions button {
+        width: 100%;
+        min-height: 48px;
+    }
+}

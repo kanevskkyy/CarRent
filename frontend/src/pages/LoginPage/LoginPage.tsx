@@ -1,5 +1,5 @@
 import i18n from '../../i18n';
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
 import { FaGithub } from 'react-icons/fa';
@@ -22,6 +22,13 @@ export default function LoginPage({ mode }: { mode: 'login' | 'register' }) {
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [busy, setBusy] = useState(false);
+    const [googleButtonWidth, setGoogleButtonWidth] = useState(() => Math.max(220, Math.min(360, window.innerWidth - 72)));
+
+    useEffect(() => {
+        const updateWidth = () => setGoogleButtonWidth(Math.max(220, Math.min(360, window.innerWidth - 72)));
+        window.addEventListener('resize', updateWidth);
+        return () => window.removeEventListener('resize', updateWidth);
+    }, []);
 
     async function handleSubmit(e: FormEvent) {
         e.preventDefault();
@@ -84,7 +91,7 @@ export default function LoginPage({ mode }: { mode: 'login' | 'register' }) {
 
                 <div className={s.social}>
                     <GoogleLogin onSuccess={handleGoogle} onError={() => setError(i18n.t("Не вдалося увійти через Google."))}
-                                 text="continue_with" shape="pill" width="360" />
+                                 text="continue_with" shape="pill" width={String(googleButtonWidth)} />
                     <a className={s.github} href={GITHUB_URL}><FaGithub />{i18n.t("Продовжити з GitHub")}</a>
                 </div>
 

@@ -95,3 +95,35 @@
     color: var(--like);
     font-size: 14px;
 }
+
+@media (max-width: 640px) {
+    .card {
+        padding: 20px 16px;
+        border-radius: 1.35rem;
+    }
+
+    .status {
+        align-items: flex-start;
+        padding: 14px;
+    }
+
+    .status p {
+        overflow-wrap: anywhere;
+    }
+
+    .form > input {
+        min-width: 0;
+        padding-inline: 16px;
+    }
+
+    .file {
+        min-height: 48px;
+        padding-inline: 14px;
+        border-radius: 1rem;
+    }
+
+    .primary {
+        min-height: 48px;
+        overflow-wrap: anywhere;
+    }
+}

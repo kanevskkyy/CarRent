@@ -25,3 +25,19 @@
     background: var(--ink);
     color: white;
 }
+
+@media (max-width: 480px) {
+    .wrap {
+        max-width: 100%;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .wrap::-webkit-scrollbar {
+        display: none;
+    }
+
+    .btn {
+        flex: 0 0 40px;
+    }
+}

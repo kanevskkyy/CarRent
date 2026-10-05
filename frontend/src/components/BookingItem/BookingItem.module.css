@@ -78,3 +78,48 @@
         justify-content: space-between;
     }
 }
+
+@media (max-width: 640px) {
+    .item {
+        display: grid;
+        grid-template-columns: 88px minmax(0, 1fr);
+        gap: 10px 14px;
+        padding: 14px;
+        border-radius: 1.35rem;
+    }
+
+    .item img {
+        grid-column: 1;
+        grid-row: 1;
+        width: 88px;
+        height: 72px;
+        border-radius: 0.9rem;
+    }
+
+    .info {
+        align-self: center;
+    }
+
+    .info h3,
+    .info p {
+        overflow-wrap: anywhere;
+    }
+
+    .info p {
+        font-size: 13px;
+    }
+
+    .side {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px 12px;
+        width: 100%;
+    }
+
+    .badge {
+        padding-inline: 10px;
+    }
+}

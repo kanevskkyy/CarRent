@@ -145,3 +145,68 @@
         grid-template-columns: 1fr;
     }
 }
+
+@media (max-width: 640px) {
+    .top {
+        gap: 16px;
+    }
+
+    .hero {
+        padding: 26px 18px 20px;
+    }
+
+    .badge {
+        letter-spacing: 0.14em;
+        font-size: 11px;
+    }
+
+    .hero h1 {
+        font-size: clamp(34px, 10vw, 46px);
+    }
+
+    .lead {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+    .search {
+        gap: 0;
+        margin-top: 24px;
+        padding: 8px 12px 12px;
+    }
+
+    .field {
+        min-height: 58px;
+        padding: 10px 4px;
+    }
+
+    .field span {
+        overflow-wrap: anywhere;
+    }
+
+    .find {
+        width: 100%;
+        min-height: 48px;
+        margin-top: 8px;
+    }
+
+    .stats {
+        padding: 20px 16px;
+    }
+
+    .statsHead {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 4px 12px;
+    }
+
+    .popular {
+        margin-top: 36px;
+    }
+
+    .popularHead {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}

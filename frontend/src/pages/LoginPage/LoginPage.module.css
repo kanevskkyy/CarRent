@@ -122,3 +122,28 @@
 .back {
     color: var(--muted-foreground);
 }
+
+@media (max-width: 480px) {
+    .page {
+        gap: 18px;
+        padding: 20px 12px;
+    }
+
+    .card {
+        padding: 22px 18px;
+        border-radius: 1.4rem;
+    }
+
+    .form input {
+        min-width: 0;
+        padding: 14px 16px;
+    }
+
+    .submit {
+        min-height: 48px;
+    }
+
+    .note {
+        font-size: 13px;
+    }
+}

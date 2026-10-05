@@ -84,3 +84,38 @@
     background: color-mix(in oklab, var(--success) 15%, white);
     color: var(--success);
 }
+
+@media (max-width: 640px) {
+    .card:hover {
+        transform: none;
+    }
+
+    .body {
+        padding: 16px;
+    }
+
+    .row {
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .row h3 {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        font-size: 18px;
+    }
+
+    .price {
+        flex: none;
+        font-size: 14px;
+    }
+
+    .tags {
+        gap: 6px;
+    }
+
+    .tags span {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+}

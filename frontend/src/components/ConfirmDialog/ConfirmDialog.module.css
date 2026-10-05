@@ -53,3 +53,30 @@
 .actions button:disabled {
     opacity: 0.6;
 }
+
+@media (max-width: 480px) {
+    .overlay {
+        place-items: center;
+        overflow-y: auto;
+        padding: 12px;
+    }
+
+    .dialog {
+        max-height: calc(100vh - 24px);
+        max-height: calc(100dvh - 24px);
+        overflow-y: auto;
+        padding: 22px 18px;
+        border-radius: 1.35rem;
+    }
+
+    .actions {
+        flex-direction: column-reverse;
+        gap: 8px;
+    }
+
+    .actions button {
+        min-height: 48px;
+        border-radius: 0.9rem;
+        overflow-wrap: anywhere;
+    }
+}
